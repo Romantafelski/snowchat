@@ -1,25 +1,21 @@
 class Snowddl:
-    """
+    '''
     Snowddl class loads DDL files for various tables in a database.
-
+    
     Attributes:
         ddl_dict (dict): dictionary of DDL files for various tables in a database.
-
+        
     Methods:
         load_ddls: loads DDL files for various tables in a database.
-    """
-
+    '''
     def __init__(self):
         self.ddl_dict = self.load_ddls()
 
     @staticmethod
     def load_ddls():
-        ddl_files = {
-            "TRANSACTIONS": "sql/ddl_transactions.sql",
-            "ORDER_DETAILS": "sql/ddl_orders.sql",
-            "PAYMENTS": "sql/ddl_payments.sql",
-            "PRODUCTS": "sql/ddl_products.sql",
-            "CUSTOMER_DETAILS": "sql/ddl_customer.sql",
+        ddl_files = {           
+            "WALMART": "sql/ddl_sales.sql",
+            "WALMART_OPERATIONS": "sql/ddl_operations.sql"
         }
 
         ddl_dict = {}
