@@ -70,9 +70,6 @@ LLAMA_PROMPT = PromptTemplate(
     template=LLAMA_TEMPLATE, input_variables=["question", "context"]
 )
 
-supabase_url = st.secrets["SUPABASE_URL"]
-supabase_key = st.secrets["SUPABASE_SERVICE_KEY"]
-supabase: Client = create_client(supabase_url, supabase_key)
 
 VERSION = "da5676342de1a5a335b848383af297f592b816b950a43d251a0a9edd0113604b"
 LLAMA = "replicate/codellama-13b-instruct:{}".format(VERSION)
@@ -152,7 +149,8 @@ def load_chain(model_name="GPT-3.5", callback_handler=None):
         openai_api_key=st.secrets["OPENAI_API_KEY"], model="text-embedding-ada-002"
     )
     vectorstore = SupabaseVectorStore(
-        embedding=embeddings, client=supabase, table_name="documents"
+        embedding=embeddings,
+        table_name="documents"
     )
     return (
         get_chain_gpt(vectorstore, callback_handler=callback_handler)

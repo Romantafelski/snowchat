@@ -10,7 +10,6 @@ conn = snowflake.connector.connect(
     role=st.secrets["ROLE"],
     database=st.secrets["DATABASE"],
     schema=st.secrets["SCHEMA"],
-    SUPABASE_URL = st.secrets["SUPABASE_URL"]
 )
 
 
