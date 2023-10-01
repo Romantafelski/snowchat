@@ -1,6 +1,9 @@
-import streamlit as st
-import openai
+import html
 import re
+import openai
+
+import streamlit as st
+from langchain.callbacks.base import BaseCallbackHandler
 
 def message_func(text, is_user=False):
     '''
@@ -49,6 +52,26 @@ def reset_chat_history():
     st.session_state["stored_session"] = []
     st.session_state['messages'] = [("Hello! I'm a chatbot designed to help you with Snowflake Database.")]  
 
+def format_message(text):
+    """
+    This function is used to format the messages in the chatbot UI.
+
+    Parameters:
+    text (str): The text to be formatted.
+    """
+    text_blocks = re.split(r"```[\s\S]*?```", text)
+    code_blocks = re.findall(r"```([\s\S]*?)```", text)
+
+    text_blocks = [html.escape(block) for block in text_blocks]
+
+    formatted_text = ""
+    for i in range(len(text_blocks)):
+        formatted_text += text_blocks[i].replace("\n", "<br>")
+        if i < len(code_blocks):
+            formatted_text += f'<pre style="white-space: pre-wrap; word-wrap: break-word;"><code>{html.escape(code_blocks[i])}</code></pre>'
+
+    return formatted_text
+
 
 # can be removed with better prompt
 def extract_code(text) -> str:
@@ -77,6 +100,29 @@ def extract_code(text) -> str:
 
     return sql_code
 
+class StreamlitUICallbackHandler(BaseCallbackHandler):
+    def __init__(self):
+        # Buffer to accumulate tokens
+        self.token_buffer = []
+        self.placeholder = None
+        self.has_streaming_ended = False
+
+    def _get_bot_message_container(self, text):
+        """Generate the bot's message container style for the given text."""
+        avatar_url = "https://avataaars.io/?avatarStyle=Transparent&topType=WinterHat2&accessoriesType=Kurt&hatColor=Blue01&facialHairType=MoustacheMagnum&facialHairColor=Blonde&clotheType=Overall&clotheColor=Gray01&eyeType=WinkWacky&eyebrowType=SadConcernedNatural&mouthType=Sad&skinColor=Light"
+        message_alignment = "flex-start"
+        message_bg_color = "#71797E"
+        avatar_class = "bot-avatar"
+        formatted_text = format_message(text)
+        container_content = f"""
+            <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content: {message_alignment};">
+                <img src="{avatar_url}" class="{avatar_class}" alt="avatar" style="width: 50px; height: 50px;" />
+                <div style="background: {message_bg_color}; color: white; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
+                    {formatted_text} \n </div>
+            </div>
+        """
+        return container_content
+
 def is_sql_query(text: str) -> bool:
     """
     Checks if the input text is likely an SQL query.
@@ -90,6 +136,7 @@ def is_sql_query(text: str) -> bool:
         "GROUP BY", "ORDER BY", "HAVING", "LIMIT", "OFFSET", "UNION", "CREATE",
         "ALTER", "DROP", "TRUNCATE", "EXPLAIN", "WITH" , "INNER JOIN"
     ]
+
 
     # Create a single regular expression pattern to search for all keywords
     pattern = r'\b(?:' + '|'.join(keywords) + r')\b'
