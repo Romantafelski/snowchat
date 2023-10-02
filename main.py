@@ -73,9 +73,7 @@ if prompt := st.chat_input():
 
 for message in st.session_state.messages:
     message_func(
-        message["content"],
-        True if message["role"] == "data" else False,
-        True if message["role"] == "user" else False,
+        message["content"]
     )
 
 callback_handler = StreamlitUICallbackHandler()
