@@ -69,13 +69,13 @@ if "model" not in st.session_state:
 
 # Prompt for user input and save
 if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"self" "role": "user", "content": prompt})
 
 for message in st.session_state.messages:
     message_func(
         message["content"],
-        True if message["role"] == "user" else False,
         True if message["role"] == "data" else False,
+        True if message["role"] == "user" else False,
     )
 
 callback_handler = StreamlitUICallbackHandler()
@@ -95,7 +95,7 @@ def get_sql(text):
 def append_message(content, role="assistant", display=False):
     message = {"role": role, "content": content}
     if model == "LLama-2":  # unable to get streaming working with LLama-2
-        message_func(content, display)
+        message_func(content, False, display)
     st.session_state.messages.append(message)
     if role != "data":
         append_chat_history(st.session_state.messages[-2]["content"], content)
