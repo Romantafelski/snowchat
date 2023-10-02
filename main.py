@@ -95,7 +95,7 @@ def get_sql(text):
 def append_message(content, role="assistant", display=False):
     message = {"role": role, "content": content}
     if model == "LLama-2":  # unable to get streaming working with LLama-2
-        message_func(content, False, display)
+        message_func(content, display)
     st.session_state.messages.append(message)
     if role != "data":
         append_chat_history(st.session_state.messages[-2]["content"], content)
