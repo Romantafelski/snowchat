@@ -8,6 +8,10 @@ from langchain.prompts.prompt import PromptTemplate
 from langchain.vectorstores import SupabaseVectorStore
 from supabase.client import Client, create_client
 
+supabase_url = st.secrets["SUPABASE_URL"]
+supabase_key = st.secrets["SUPABASE_SERVICE_KEY"]
+supabase: Client = create_client(supabase_url, supabase_key)
+
 template = """You are an AI chatbot having a conversation with a human.
 
 Chat History:\"""
