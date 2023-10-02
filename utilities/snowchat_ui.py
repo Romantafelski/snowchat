@@ -23,7 +23,7 @@ def message_func(text, is_user=False):
         st.write(f"""
                 <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content: {message_alignment};">
                     <div style="background: {message_bg_color}; color: white; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%;">
-                        {text}
+                        
                     </div>
                             <img src="{avatar_url}" class="{avatar_class}" alt="avatar" />
 
@@ -38,7 +38,7 @@ def message_func(text, is_user=False):
                 <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content: {message_alignment};">
                     <img src="{avatar_url}" class="{avatar_class}" alt="avatar" />
                     <div style="background: {message_bg_color}; color: white; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%;">
-                        {text} \n </div>
+                        \n </div>
                 </div>
                 """, unsafe_allow_html=True)  
 
