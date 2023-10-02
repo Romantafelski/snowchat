@@ -148,8 +148,12 @@ def load_chain(model_name="GPT-3.5", callback_handler=None):
     embeddings = OpenAIEmbeddings(
         openai_api_key=st.secrets["OPENAI_API_KEY"], model="text-embedding-ada-002"
     )
+    vectorstore = SupabaseVectorStore(
+        embedding=embeddings,
+        table_name="documents"
+    )
     return (
-        get_chain_gpt(callback_handler=callback_handler)
+        get_chain_gpt(vectorstore, callback_handler=callback_handler)
         if "GPT-3.5" in model_name
-        else get_chain_replicate(callback_handler=callback_handler)
+        else get_chain_replicate(vectorstore, callback_handler=callback_handler)
     )
