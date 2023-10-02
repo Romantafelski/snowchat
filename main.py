@@ -69,11 +69,13 @@ if "model" not in st.session_state:
 
 # Prompt for user input and save
 if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"role": ["user", "data"], "content": prompt})
 
 for message in st.session_state.messages:
     message_func(
-        message["content"]
+        message["content"],
+        True if message["role"] == "data" else False,
+        True if message["role"] == "user" else False,
     )
 
 callback_handler = StreamlitUICallbackHandler()
